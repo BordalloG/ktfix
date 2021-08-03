@@ -2,16 +2,18 @@ package ktfix
 
 import org.junit.Test
 
-data class BasicTypes(val string:String, val char: Char,
-                      val double: Double, val float: Float,
-                      val int: Int, val short:Short, val long: Long,
-                      val byte: Byte,
-                      val boolean: Boolean
-                )
+data class BasicTypes(
+    val string: String, val char: Char,
+    val double: Double, val float: Float,
+    val int: Int, val short: Short, val long: Long,
+    val byte: Byte,
+    val boolean: Boolean
+)
 
 class FixtureTest {
 
-    @Test fun `should build a fixture of a class with all primitive types`(){
+    @Test
+    fun `should build a fixture of a class with all primitive types`() {
         val basic = Fixture.build<BasicTypes>()
 
         assert(basic.string != null)
@@ -25,7 +27,8 @@ class FixtureTest {
         assert(basic.boolean != null)
     }
 
-    @Test fun `should build a fixture receiving default values`(){
+    @Test
+    fun `should build a fixture receiving default values`() {
         val defaults = mutableMapOf<String, Any>(
             ("string" to "cool string"),
             ("char" to 'h'),
@@ -36,7 +39,7 @@ class FixtureTest {
             ("long" to 3L),
             ("byte" to 2),
             ("boolean" to false)
-            )
+        )
 
         val basic = Fixture.build<BasicTypes>(defaults)
 
@@ -46,7 +49,7 @@ class FixtureTest {
         assert(basic.float != null && basic.float == 0.123f)
         assert(basic.int != null && basic.int == 2)
         assert(basic.short != null && basic.short == 2.toShort())
-        assert(basic.long != null && basic.long ==  3L)
+        assert(basic.long != null && basic.long == 3L)
         assert(basic.boolean != null && !basic.boolean)
     }
 }
