@@ -3,39 +3,58 @@ package ktfix
 import kotlin.reflect.KProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import kotlin.reflect.KType
+import ktfix.Random.Companion.random
+import kotlin.reflect.KCallable
+import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.declaredMembers
 
 
 class Fixture {
     companion object {
-        fun random(type: KType): Any {
-            type.classifier
-            return when (type.toString()) {
-                "kotlin.String" -> "something"
-                "kotlin.Char" -> 'c'
-                "kotlin.Double" -> 0.5
-                "kotlin.Float" -> 0.5f
-                "kotlin.Short" -> 1
-                "kotlin.Long" -> 1
-                "kotlin.Int" -> 1
-                "kotlin.Byte" -> 1
-                "kotlin.Boolean" -> true
-                else -> throw Exception("$type type not supported yet")
-            }
+        inline fun <reified T> build(properties: MutableMap<String, Any> = mutableMapOf()): T {
+            generateFakeObject(membersOf<T>(), properties)
+            return convertValue(properties)
         }
 
-        inline fun <reified T> build(properties: MutableMap<String, Any> = mutableMapOf()): T {
-            val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
-
-            for (element in T::class.declaredMembers) {
-                if(element is KProperty) {
+        fun generateFakeObject(
+            elements: Collection<KCallable<*>>,
+            properties: MutableMap<String, Any>
+        ): MutableMap<String, Any> {
+            for (element in elements) {
+                if (element is KProperty) {
                     if (properties[element.name] == null) {
-                        properties[element.name] = random(element.returnType)
+                        properties[element.name] = generateValue(element)
                     }
                 }
             }
+            return properties
+        }
+
+        private fun generateValue(element: KCallable<*>) : Any {
+            if (element.returnType.toString().contains("kotlin")) {
+                return random(element.returnType)
+            } else {
+                if (element.returnType.classifier is KClass<*>) {
+                    return generateFakeObject(membersOf(element.returnType.classifier as KClass<*>) ,mutableMapOf())
+                }
+                return true
+            }
+        }
+
+
+
+        inline fun <reified T> convertValue(properties: MutableMap<String, Any>): T {
+            val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
             return mapper.convertValue(properties, T::class.java)
         }
+
+        private fun membersOf(element: KClass<*>) : Collection<KCallable<*>>  {
+            return element.members
+        }
+        inline fun <reified T> membersOf() : Collection<KCallable<*>>  {
+            return T::class.members
+        }
+
     }
 }
