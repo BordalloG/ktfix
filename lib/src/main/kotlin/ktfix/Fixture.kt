@@ -3,38 +3,59 @@ package ktfix
 import kotlin.reflect.KProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import kotlin.reflect.KType
-import kotlin.reflect.full.declaredMembers
+import ktfix.extensions.RandomExtensions.Companion.nextBasicType
+import kotlin.random.Random
+import kotlin.reflect.KCallable
+import kotlin.reflect.KClass
 
 
 class Fixture {
     companion object {
-        fun random(type: KType): Any {
-            type.classifier
-            return when (type.toString()) {
-                "kotlin.String" -> "something"
-                "kotlin.Char" -> 'c'
-                "kotlin.Double" -> 0.5
-                "kotlin.Float" -> 0.5f
-                "kotlin.Short" -> 1
-                "kotlin.Long" -> 1
-                "kotlin.Int" -> 1
-                "kotlin.Byte" -> 1
-                "kotlin.Boolean" -> true
-                else -> throw Exception("$type type not supported yet")
-            }
-        }
+        private val kotlinBasicTypes = listOf(
+            "kotlin.String",
+            "kotlin.Char",
+            "kotlin.Double",
+            "kotlin.Float",
+            "kotlin.Short",
+            "kotlin.Long",
+            "kotlin.Int",
+            "kotlin.Byte",
+            "kotlin.Boolean"
+        )
 
         inline fun <reified T> build(properties: MutableMap<String, Any> = mutableMapOf()): T {
-            val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
+            generateObjectOf(T::class, properties)
+            return convertValue(properties)
+        }
 
-            for (element in T::class.declaredMembers) {
-                if(element is KProperty) {
-                    if (properties[element.name] == null) {
-                        properties[element.name] = random(element.returnType)
+        fun generateObjectOf(clazz: KClass<*>, properties: MutableMap<String, Any>): MutableMap<String, Any> {
+            for (member in membersOf(clazz)) {
+                if (member is KProperty) {
+                    if (properties[member.name] == null) {
+                        properties[member.name] = generateValue(member)
                     }
                 }
             }
+            return properties
+        }
+
+        private fun generateValue(element: KCallable<*>): Any {
+            if (element.returnType.toString() in kotlinBasicTypes) {
+                return Random.nextBasicType(element.returnType)
+            } else {
+                if (element.returnType.classifier is KClass<*>) {
+                    return generateObjectOf(element.returnType.classifier as KClass<*>, mutableMapOf())
+                }
+                return true
+            }
+        }
+
+        private fun membersOf(element: KClass<*>): Collection<KCallable<*>> {
+            return element.members
+        }
+
+        inline fun <reified T> convertValue(properties: MutableMap<String, Any>): T {
+            val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
             return mapper.convertValue(properties, T::class.java)
         }
     }
