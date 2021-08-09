@@ -50,9 +50,7 @@ class Fixture {
             }
         }
 
-        private fun membersOf(element: KClass<*>): Collection<KCallable<*>> {
-            return element.members
-        }
+        private fun membersOf(element: KClass<*>): Collection<KCallable<*>> = element.members
 
         inline fun <reified T> convertValue(properties: MutableMap<String, Any>): T {
             val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
