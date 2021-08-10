@@ -29,7 +29,7 @@ class Fixture {
         }
 
         fun generateObjectOf(clazz: KClass<*>, properties: MutableMap<String, Any>): MutableMap<String, Any> {
-            for (member in membersOf(clazz)) {
+            for (member in clazz.members) {
                 if (member is KProperty) {
                     if (properties[member.name] == null) {
                         properties[member.name] = generateValue(member)
@@ -49,8 +49,6 @@ class Fixture {
                 return true
             }
         }
-
-        private fun membersOf(element: KClass<*>): Collection<KCallable<*>> = element.members
 
         inline fun <reified T> convertValue(properties: MutableMap<String, Any>): T {
             val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
