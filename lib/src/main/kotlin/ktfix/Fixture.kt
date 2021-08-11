@@ -55,18 +55,3 @@ class Fixture {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-val ala = "kazam"
-
-
