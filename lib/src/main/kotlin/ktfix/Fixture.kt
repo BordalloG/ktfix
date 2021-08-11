@@ -1,13 +1,12 @@
 package ktfix
 
-import kotlin.reflect.KProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import ktfix.extensions.RandomExtensions.Companion.nextBasicType
 import kotlin.random.Random
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
-
+import kotlin.reflect.KProperty
 
 class Fixture {
     companion object {

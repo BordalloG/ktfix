@@ -5,7 +5,7 @@ import kotlin.reflect.KType
 
 class RandomExtensions {
     companion object {
-        private const val alphanumerics = "abcdefghiklmnopqrstuvwxyz0123456789";
+        private const val alphanumerics = "abcdefghiklmnopqrstuvwxyz0123456789"
 
         fun Random.nextBasicType(type: KType): Any {
             return when (type.toString().split(".").last()) {
