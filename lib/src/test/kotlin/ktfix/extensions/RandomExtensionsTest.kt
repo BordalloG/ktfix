@@ -2,11 +2,11 @@ package ktfix.extensions
 
 import ktfix.extensions.RandomExtensions.Companion.nextChar
 import ktfix.extensions.RandomExtensions.Companion.nextString
-import kotlin.random.Random
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
+import kotlin.random.Random
 
 class RandomExtensionsTest {
 
