@@ -4,12 +4,17 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 
 data class BasicTypes(
-    val string: String, val char: Char,
-    val double: Double, val float: Float,
-    val int: Int, val short: Short, val long: Long,
+    val string: String,
+    val char: Char,
+    val double: Double,
+    val float: Float,
+    val int: Int,
+    val short: Short,
+    val long: Long,
     val byte: Byte,
     val boolean: Boolean
 )
+
 data class Clazz(val double: Double, val string: String, val int: Int)
 data class ClazzWithClass(val integer: Int, val clazz: Clazz)
 
@@ -17,7 +22,7 @@ class FixtureTest {
 
     @Test
     fun `should build a fixture of a class with only primitive types`() {
-       assertDoesNotThrow { Fixture.build<BasicTypes>() }
+        assertDoesNotThrow { Fixture.build<BasicTypes>() }
     }
 
     @Test
