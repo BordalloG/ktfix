@@ -8,50 +8,52 @@ import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-abstract class Fixture {
-    companion object {
-        inline fun <reified T> build(properties: MutableMap<String, Any> = mutableMapOf()): T {
-            generateObjectOf(T::class, properties)
-            return convertValue(properties)
-        }
-    }
-}
-
-fun generateObjectOf(clazz: KClass<*>, properties: MutableMap<String, Any>): MutableMap<String, Any> {
-    for (member in clazz.members) {
-        if (member is KProperty) {
-            if (properties[member.name] == null) {
-                properties[member.name] = generateValue(member)
+class Fixture {
+    fun generateObjectOf(clazz: KClass<*>, properties: MutableMap<String, Any>): MutableMap<String, Any> {
+        for (member in clazz.members) {
+            if (member is KProperty) {
+                if (properties[member.name] == null) {
+                    properties[member.name] = generateValue(member)
+                }
             }
         }
+        return properties
     }
-    return properties
-}
 
-private fun generateValue(element: KCallable<*>): Any {
-    if (element.returnType.toString() in kotlinBasicTypes) {
-        return Random.nextBasicType(element.returnType)
-    } else {
-        if (element.returnType.classifier is KClass<*>) {
-            return generateObjectOf(element.returnType.classifier as KClass<*>, mutableMapOf())
+    private fun generateValue(element: KCallable<*>): Any {
+        if (element.returnType.toString() in kotlinBasicTypes) {
+            return Random.nextBasicType(element.returnType)
+        } else {
+            if (element.returnType.classifier is KClass<*>) {
+                return generateObjectOf(element.returnType.classifier as KClass<*>, mutableMapOf())
+            }
+            return true
         }
-        return true
+    }
+
+    inline fun <reified T> convertValue(properties: MutableMap<String, Any>): T {
+        val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
+        return mapper.convertValue(properties, T::class.java)
+    }
+
+    private val kotlinBasicTypes = listOf(
+        "kotlin.String",
+        "kotlin.Char",
+        "kotlin.Double",
+        "kotlin.Float",
+        "kotlin.Short",
+        "kotlin.Long",
+        "kotlin.Int",
+        "kotlin.Byte",
+        "kotlin.Boolean"
+    )
+
+    companion object {
+        val fixture = Fixture()
+
+        inline fun <reified T> build(properties: MutableMap<String, Any> = mutableMapOf()): T {
+            fixture.generateObjectOf(T::class, properties)
+            return fixture.convertValue(properties)
+        }
     }
 }
-
-inline fun <reified T> convertValue(properties: MutableMap<String, Any>): T {
-    val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
-    return mapper.convertValue(properties, T::class.java)
-}
-
-private val kotlinBasicTypes = listOf(
-    "kotlin.String",
-    "kotlin.Char",
-    "kotlin.Double",
-    "kotlin.Float",
-    "kotlin.Short",
-    "kotlin.Long",
-    "kotlin.Int",
-    "kotlin.Byte",
-    "kotlin.Boolean"
-)
