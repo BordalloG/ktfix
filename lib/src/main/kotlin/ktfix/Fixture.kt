@@ -2,13 +2,12 @@ package ktfix
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import ktfix.extensions.RandomExtensions
 import ktfix.extensions.RandomExtensions.Companion.nextType
 import kotlin.random.Random
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import ktfix.extensions.RandomExtensions
-
 
 class Fixture {
     fun generateObjectOf(clazz: KClass<*>, properties: MutableMap<String, Any>): MutableMap<String, Any> {
@@ -20,13 +19,10 @@ class Fixture {
     }
 
     private fun generateValue(element: KCallable<*>): Any {
-        if (element.returnType.classifier in RandomExtensions.supportedTypes) {
-            return Random.nextType(element.returnType)
+        return if (element.returnType.classifier in RandomExtensions.supportedTypes) {
+            Random.nextType(element.returnType)
         } else {
-            if (element.returnType.classifier is KClass<*>) {
-                return generateObjectOf(element.returnType.classifier as KClass<*>, mutableMapOf())
-            }
-            return true
+            generateObjectOf(element.returnType.classifier as KClass<*>, mutableMapOf())
         }
     }
 
