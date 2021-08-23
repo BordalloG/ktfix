@@ -32,7 +32,6 @@ checkout our next steps in TODO
 
 ### Todo:
 - Generate
-  - Date Types
   - Enum
   - Collections
 - Allow user to create templates to use instead of mutable maps
