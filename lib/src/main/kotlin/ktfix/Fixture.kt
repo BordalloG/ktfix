@@ -1,6 +1,7 @@
 package ktfix
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import ktfix.extensions.RandomExtensions
 import ktfix.extensions.RandomExtensions.Companion.nextType
@@ -27,7 +28,7 @@ class Fixture {
     }
 
     inline fun <reified T> convertValue(properties: MutableMap<String, Any>): T {
-        val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build())
+        val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build()).registerModule(JavaTimeModule())
         return mapper.convertValue(properties, T::class.java)
     }
 

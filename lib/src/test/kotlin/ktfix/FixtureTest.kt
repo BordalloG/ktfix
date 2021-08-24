@@ -2,6 +2,8 @@ package ktfix
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class BasicTypes(
     val string: String,
@@ -17,6 +19,7 @@ data class BasicTypes(
 
 data class Clazz(val double: Double, val string: String, val int: Int)
 data class ClazzWithClass(val integer: Int, val clazz: Clazz)
+data class ClazzWithDate(val localDateTime: LocalDateTime, val localDate: LocalDate)
 
 class FixtureTest {
 
@@ -28,6 +31,11 @@ class FixtureTest {
     @Test
     fun `should build a fixture of a class with another class`() {
         assertDoesNotThrow { Fixture.build<ClazzWithClass>() }
+    }
+
+    @Test
+    fun `should build a fixture with date and local date properties`() {
+        assertDoesNotThrow { Fixture.build<ClazzWithDate>() }
     }
 
     @Test
