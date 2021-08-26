@@ -49,7 +49,10 @@ class FixtureTest {
 
     @Test
     fun `should build a fixture with enum properties`() {
-        assertDoesNotThrow { Fixture.build<ClazzWithEnum>() }
+        assertDoesNotThrow {
+            val value = Fixture.build<ClazzWithEnum>()
+            assert(value.enumClass in EnumClazz.values())
+        }
     }
 
     @Test
