@@ -21,6 +21,7 @@ class Fixture {
         return properties
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun generateValue(element: KCallable<*>): Any {
         return if (element.returnType.classifier in RandomExtensions.supportedTypes) {
             Random.nextType(element.returnType)
