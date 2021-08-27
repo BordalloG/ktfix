@@ -17,9 +17,18 @@ data class BasicTypes(
     val boolean: Boolean
 )
 
+enum class EnumClazz {
+    FIRST,
+    SECOND,
+    THIRD,
+    FOURTH,
+    FIFTH
+}
+
 data class Clazz(val double: Double, val string: String, val int: Int)
 data class ClazzWithClass(val integer: Int, val clazz: Clazz)
 data class ClazzWithDate(val localDateTime: LocalDateTime, val localDate: LocalDate)
+data class ClazzWithEnum(val enumClass: EnumClazz)
 
 class FixtureTest {
 
@@ -36,6 +45,14 @@ class FixtureTest {
     @Test
     fun `should build a fixture with date and local date properties`() {
         assertDoesNotThrow { Fixture.build<ClazzWithDate>() }
+    }
+
+    @Test
+    fun `should build a fixture with enum properties`() {
+        assertDoesNotThrow {
+            val value = Fixture.build<ClazzWithEnum>()
+            assert(value.enumClass in EnumClazz.values())
+        }
     }
 
     @Test

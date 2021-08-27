@@ -32,6 +32,5 @@ checkout our next steps in TODO
 
 ### Todo:
 - Generate
-  - Enum
   - Collections
 - Allow user to create templates to use instead of mutable maps

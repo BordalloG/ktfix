@@ -1,6 +1,7 @@
 package ktfix.extensions
 
 import ktfix.extensions.RandomExtensions.Companion.nextChar
+import ktfix.extensions.RandomExtensions.Companion.nextEnum
 import ktfix.extensions.RandomExtensions.Companion.nextLocalDate
 import ktfix.extensions.RandomExtensions.Companion.nextLocalDateTime
 import ktfix.extensions.RandomExtensions.Companion.nextString
@@ -12,6 +13,14 @@ import org.junit.jupiter.params.provider.ValueSource
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.random.Random
+
+enum class EnumClazz {
+    FIRST,
+    SECOND,
+    THIRD,
+    FOURTH,
+    FIFTH
+}
 
 class RandomExtensionsTest {
 
@@ -111,5 +120,11 @@ class RandomExtensionsTest {
                 LocalDateTime.of(2019, 1, 1, 1, 1, 1)
             )
         }
+    }
+
+    @Test
+    fun `nextEnum should return a random value from that Enum`() {
+        val randomValue = Random.nextEnum(EnumClazz::class)
+        assert(randomValue in EnumClazz.values())
     }
 }

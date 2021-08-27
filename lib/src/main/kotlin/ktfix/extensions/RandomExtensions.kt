@@ -5,6 +5,7 @@ import java.time.LocalDate.ofEpochDay
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import kotlin.random.Random
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
@@ -70,6 +71,11 @@ class RandomExtensions {
                 ),
                 0, zoneOffSet
             )
+        }
+
+        fun Random.nextEnum(enumType: KClass<out Enum<*>>): Any {
+            val enumValues = enumType.java.enumConstants
+            return enumValues[Random.nextInt(0, enumValues.size)]
         }
     }
 }
