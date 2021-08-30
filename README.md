@@ -32,6 +32,5 @@ checkout our next steps in TODO
 
 ### Todo:
 - Add support to generate
-  - Collections
-  - Nullable
+  - Collections  
 - Add support to use of templates
