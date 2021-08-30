@@ -31,6 +31,7 @@ Ktfix does not support the generation of random data every type of data yet,
 checkout our next steps in TODO
 
 ### Todo:
-- Generate
+- Add support to generate
   - Collections
-- Allow user to create templates to use instead of mutable maps
+  - Nullable
+- Add support to use of templates
