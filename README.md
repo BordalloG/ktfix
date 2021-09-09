@@ -3,24 +3,6 @@
 ## Project Description
 Ktfix is a fixture lib that helps you test your code by providing an easy way to create fake data.
 
-## 🚀 Installing Ktfix
-
-To intall Ktfix, follow this steps:
-
-If you use Maven, you need to add this required dependencies:
-```
-<dependency>
-  <groupId>TO BE DEFINED</groupId>
-  <artifactId>TO BE DEFINED</artifactId>
-  <scope>test</scope>
-</dependency>
-```
-
-If you use Gradle, you need to add this required dependencies:
-```
-testImplementation 'TO BE DEFINED'
-```
-
 ### ☕ Usage
 Considering your code has a data class such as:
 ```kotlin
@@ -51,10 +33,10 @@ checkout our next steps in TODO
 ### 🛠️ Adjustments and improvements:
 
 The project is still under development and future updates will focus on the following tasks:
-- [ ] Generate Date Types
-- [ ] Generate Enum
+- [x] Generate Date Types
+- [x] Generate Enum
 - [ ] Generate Collections
-- [ ] Allow user to create templates to use instead of mutable maps
+- [ ] Add support to use of templates
 
 
 ## 📫 Contributing to Ktfix
