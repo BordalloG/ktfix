@@ -1,6 +1,5 @@
 package ktfix.strategies
 
-import ktfix.extensions.RandomExtensions
 import ktfix.extensions.RandomExtensions.Companion.nextType
 import kotlin.random.Random
 import kotlin.reflect.KClass

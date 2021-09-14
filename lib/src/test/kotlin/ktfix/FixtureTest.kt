@@ -34,14 +34,14 @@ class FixtureTest {
 
     @Test
     fun `should build a fixture of a primitive types`() {
-        assertDoesNotThrow { println("Generated: ${Fixture.build<Int>()}")}
-        assertDoesNotThrow { println("Generated: ${Fixture.build<String>()}")}
-        assertDoesNotThrow { println("Generated: ${Fixture.build<Double>()}")}
+        assertDoesNotThrow { println(Fixture.build<Int>())}
+        assertDoesNotThrow { println(Fixture.build<String>())}
+        assertDoesNotThrow { println(Fixture.build<Double>())}
     }
 
     @Test
     fun `should build a fixture of a class with only primitive types`() {
-        assertDoesNotThrow { Fixture.build<BasicTypes>() }
+        assertDoesNotThrow { println("Generated: ${Fixture.build<BasicTypes>()}") }
     }
 
     @Test
@@ -60,32 +60,5 @@ class FixtureTest {
             val value = Fixture.build<ClazzWithEnum>()
             assert(value.enumClass in EnumClazz.values())
         }
-    }
-
-    @Test
-    fun `should build a fixture with predefined values`() {
-        val defaults = mutableMapOf<String, Any>(
-            ("string" to "cool string"),
-            ("char" to 'h'),
-            ("double" to 0.123),
-            ("float" to 0.123f),
-            ("int" to 2),
-            ("byte" to 1),
-            ("short" to 2.toShort()),
-            ("long" to 1L),
-            ("boolean" to false)
-        )
-
-        val basic = Fixture.build<BasicTypes>(defaults)
-
-        assert(basic.string == "cool string")
-        assert(basic.char == 'h')
-        assert(basic.double == 0.123)
-        assert(basic.float == 0.123f)
-        assert(basic.int == 2)
-        assert(basic.byte == 1.toByte())
-        assert(basic.short == 2.toShort())
-        assert(basic.long == 1L)
-        assert(!basic.boolean)
     }
 }
