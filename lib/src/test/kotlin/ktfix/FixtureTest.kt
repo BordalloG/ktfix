@@ -33,6 +33,13 @@ data class ClazzWithEnum(val enumClass: EnumClazz)
 class FixtureTest {
 
     @Test
+    fun `should build a fixture of a primitive types`() {
+        assertDoesNotThrow { println("Generated: ${Fixture.build<Int>()}")}
+        assertDoesNotThrow { println("Generated: ${Fixture.build<String>()}")}
+        assertDoesNotThrow { println("Generated: ${Fixture.build<Double>()}")}
+    }
+
+    @Test
     fun `should build a fixture of a class with only primitive types`() {
         assertDoesNotThrow { Fixture.build<BasicTypes>() }
     }

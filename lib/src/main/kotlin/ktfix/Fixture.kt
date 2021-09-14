@@ -6,10 +6,13 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import ktfix.extensions.RandomExtensions
 import ktfix.extensions.RandomExtensions.Companion.nextEnum
 import ktfix.extensions.RandomExtensions.Companion.nextType
+import ktfix.strategies.BasicTypeGenerator
+import ktfix.strategies.ObjectGenerator
 import kotlin.random.Random
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubclassOf
 
 class Fixture {
@@ -41,12 +44,17 @@ class Fixture {
         return mapper.convertValue(properties, T::class.java)
     }
 
+    fun chooseStrategy(clazz: KClass<*>): ObjectGenerator {
+        if(clazz.createType().classifier in RandomExtensions.supportedTypes)
+            return BasicTypeGenerator()
+        return BasicTypeGenerator()
+    }
+
     companion object {
         val fixture = Fixture()
-
         inline fun <reified T> build(properties: MutableMap<String, Any> = mutableMapOf()): T {
-            fixture.generateObjectOf(T::class, properties)
-            return fixture.convertValue(properties)
+            val strategy = fixture.chooseStrategy(T::class)
+            return strategy.execute(T::class) as T
         }
     }
 }
