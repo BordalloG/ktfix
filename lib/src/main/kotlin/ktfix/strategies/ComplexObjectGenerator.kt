@@ -12,9 +12,8 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubclassOf
 
-class ComplexObjectGenerator : ObjectGenerator {
+class ComplexObjectGenerator(private val properties: MutableMap<String, Any>) : ObjectGenerator {
     override fun execute(clazz: KClass<*>): Any {
-        var properties = mutableMapOf<String, Any>()
         clazz.members.filter { it is KProperty && properties[it.name] == null }
             .map {
                 properties[it.name] = generateValue(it)
@@ -32,7 +31,7 @@ class ComplexObjectGenerator : ObjectGenerator {
             if (elementClazz.isSubclassOf(Enum::class)) {
                 return Random.nextEnum(elementClazz as KClass<out Enum<*>>)
             } else {
-                execute(elementClazz)
+                ComplexObjectGenerator(mutableMapOf()).execute(elementClazz)
             }
         }
     }
