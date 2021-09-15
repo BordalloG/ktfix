@@ -1,7 +1,6 @@
 package ktfix.extensions
 
 import java.time.LocalDate
-import java.time.LocalDate.ofEpochDay
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import kotlin.random.Random
@@ -76,6 +75,16 @@ class RandomExtensions {
         fun Random.nextEnum(enumType: KClass<out Enum<*>>): Any {
             val enumValues = enumType.java.enumConstants
             return enumValues[Random.nextInt(0, enumValues.size)]
+        }
+
+        inline fun <reified T> Random.nextList(length: Int = Random.nextInt(1, 20)): List<T> {
+            val list = mutableListOf<T>()
+            val type = T::class.createType()
+
+            repeat(length) {
+                list.add(Random.nextType(type) as T)
+            }
+            return list
         }
     }
 }

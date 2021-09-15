@@ -2,6 +2,7 @@ package ktfix.extensions
 
 import ktfix.extensions.RandomExtensions.Companion.nextChar
 import ktfix.extensions.RandomExtensions.Companion.nextEnum
+import ktfix.extensions.RandomExtensions.Companion.nextList
 import ktfix.extensions.RandomExtensions.Companion.nextLocalDate
 import ktfix.extensions.RandomExtensions.Companion.nextLocalDateTime
 import ktfix.extensions.RandomExtensions.Companion.nextString
@@ -126,5 +127,23 @@ class RandomExtensionsTest {
     fun `nextEnum should return a random value from that Enum`() {
         val randomValue = Random.nextEnum(EnumClazz::class)
         assert(randomValue in EnumClazz.values())
+    }
+
+    @Test
+    fun `nextList should return a list of T`() {
+        val list = Random.nextList<Int>()
+        val stringList = Random.nextList<String>()
+        println(list)
+        println(stringList)
+        assertNotEquals(list.first(), list.last())
+
+    }
+    @Test
+    fun `nextList should return a list of T with specified length `() {
+        val expectedSize = 10
+        val list = Random.nextList<Int>(expectedSize)
+        println(list)
+        assert(list.size == expectedSize)
+        assertNotEquals(list.first(), list.last())
     }
 }

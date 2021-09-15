@@ -93,5 +93,4 @@ class FixtureTest {
     fun `Should generate a fixture of an Enum`() {
         assertDoesNotThrow { Fixture.build<EnumClazz>() }
     }
-
 }

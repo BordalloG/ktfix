@@ -15,7 +15,7 @@ class Fixture(val properties: MutableMap<String, Any> = mutableMapOf()) {
         if (clazz.createType().classifier in RandomExtensions.supportedTypes)
             return BasicTypeGenerator()
 
-        if(clazz.isSubclassOf(Enum::class))
+        if (clazz.isSubclassOf(Enum::class))
             return EnumGenerator()
 
         return ComplexObjectGenerator(properties)
