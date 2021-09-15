@@ -88,4 +88,10 @@ class FixtureTest {
         assert(basic.long == 1L)
         assert(!basic.boolean)
     }
+
+    @Test
+    fun `Should generate a fixture of an Enum`() {
+        assertDoesNotThrow { Fixture.build<EnumClazz>() }
+    }
+
 }
