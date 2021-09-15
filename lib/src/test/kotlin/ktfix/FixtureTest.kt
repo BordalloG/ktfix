@@ -34,9 +34,9 @@ class FixtureTest {
 
     @Test
     fun `should build a fixture of a primitive types`() {
-        assertDoesNotThrow { println(Fixture.build<Int>())}
-        assertDoesNotThrow { println(Fixture.build<String>())}
-        assertDoesNotThrow { println(Fixture.build<Double>())}
+        assertDoesNotThrow { println(Fixture.build<Int>()) }
+        assertDoesNotThrow { println(Fixture.build<String>()) }
+        assertDoesNotThrow { println(Fixture.build<Double>()) }
     }
 
     @Test
