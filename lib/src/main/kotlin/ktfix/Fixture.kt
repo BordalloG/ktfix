@@ -1,52 +1,32 @@
 package ktfix
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import ktfix.extensions.RandomExtensions
-import ktfix.extensions.RandomExtensions.Companion.nextEnum
-import ktfix.extensions.RandomExtensions.Companion.nextType
-import kotlin.random.Random
-import kotlin.reflect.KCallable
+import ktfix.strategies.BasicTypeGenerator
+import ktfix.strategies.ComplexObjectGenerator
+import ktfix.strategies.EnumGenerator
+import ktfix.strategies.ObjectGenerator
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
+import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubclassOf
 
-class Fixture {
-    fun generateObjectOf(clazz: KClass<*>, properties: MutableMap<String, Any>): MutableMap<String, Any> {
-        clazz.members.filter { it is KProperty && properties[it.name] == null }
-            .map {
-                properties[it.name] = generateValue(it)
-            }
-        return properties
-    }
+class Fixture(val properties: MutableMap<String, Any> = mutableMapOf()) {
 
-    @Suppress("UNCHECKED_CAST")
-    private fun generateValue(element: KCallable<*>): Any {
-        return if (element.returnType.classifier in RandomExtensions.supportedTypes) {
-            Random.nextType(element.returnType)
-        } else {
-            val elementClazz = element.returnType.classifier as KClass<*>
+    fun chooseStrategy(clazz: KClass<*>): ObjectGenerator {
+        if (clazz.createType().classifier in RandomExtensions.supportedTypes)
+            return BasicTypeGenerator()
 
-            if (elementClazz.isSubclassOf(Enum::class)) {
-                return Random.nextEnum(elementClazz as KClass<out Enum<*>>)
-            } else {
-                generateObjectOf(elementClazz, mutableMapOf())
-            }
-        }
-    }
+        if (clazz.isSubclassOf(Enum::class))
+            return EnumGenerator()
 
-    inline fun <reified T> convertValue(properties: MutableMap<String, Any>): T {
-        val mapper = ObjectMapper().registerModule(KotlinModule.Builder().build()).registerModule(JavaTimeModule())
-        return mapper.convertValue(properties, T::class.java)
+        return ComplexObjectGenerator(properties)
     }
 
     companion object {
-        val fixture = Fixture()
 
         inline fun <reified T> build(properties: MutableMap<String, Any> = mutableMapOf()): T {
-            fixture.generateObjectOf(T::class, properties)
-            return fixture.convertValue(properties)
+            val fixture = Fixture(properties)
+            val strategy = fixture.chooseStrategy(T::class)
+            return strategy.execute(T::class) as T
         }
     }
 }
